@@ -1,4 +1,3 @@
-
 // import { useState } from "react";
 // import { useNavigate } from "react-router-dom";
 // import {
@@ -127,7 +126,7 @@
 
 // export default Header;
 
-
+//client/src/components/layout/Header.jsx
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
@@ -139,13 +138,14 @@ import {
   Menu,
   Briefcase,
 } from "lucide-react";
-
+import { useCart } from "../../context/CartContext";
 function Header() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const currentSearch = searchParams.get("search") || "";
   const [search, setSearch] = useState(currentSearch);
+  const { cartCount } = useCart();
 
   useEffect(() => {
     setSearch(currentSearch);
@@ -176,7 +176,9 @@ function Header() {
       params.delete("search");
 
       const queryString = params.toString();
-      navigate(queryString ? `/products/list?${queryString}` : "/products/list");
+      navigate(
+        queryString ? `/products/list?${queryString}` : "/products/list",
+      );
     }
   };
 
@@ -197,7 +199,18 @@ function Header() {
           </div>
 
           <div className="flex items-center gap-5">
-            <ShoppingCart size={24} />
+            <div
+              onClick={() => navigate("/cart")}
+              className="relative cursor-pointer"
+            >
+              <ShoppingCart size={24} />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </div>
+
             <User size={24} />
           </div>
         </div>
@@ -266,9 +279,16 @@ function Header() {
 
             <div
               onClick={() => navigate("/cart")}
-              className="flex flex-col items-center cursor-pointer"
+              className="flex flex-col items-center cursor-pointer relative"
             >
-              <ShoppingCart size={20} />
+              <div className="relative">
+                <ShoppingCart size={20} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </div>
               <span>My cart</span>
             </div>
           </div>
