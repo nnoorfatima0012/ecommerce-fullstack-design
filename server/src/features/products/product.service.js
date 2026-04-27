@@ -1,0 +1,179 @@
+//server/src/features/products/product.service.js
+const Product = require("./product.model");
+
+// const getAllProducts = async (queryParams) => {
+//   const {
+//     search,
+//     category,
+//     minPrice,
+//     maxPrice,
+//     sort,
+//     deal,
+//     featured,
+//     recommended,
+//     brand,
+//     rating,
+//     verified,
+//   } = queryParams;
+
+//   const query = {};
+
+//   if (search) {
+//     query.$or = [
+//       { title: { $regex: search, $options: "i" } },
+//       { brand: { $regex: search, $options: "i" } },
+//       { tags: { $regex: search, $options: "i" } },
+//     ];
+//   }
+
+//   if (category) {
+//     query.category = category;
+//   }
+//   if (brand) {
+//   query.brand = { $in: brand.split(",") };
+// }
+
+// if (rating) {
+//   query.rating = { $gte: Number(rating) };
+// }
+
+// if (verified === "true") {
+//   query["supplier.verified"] = true;
+// }
+//   if (deal === "true") query.isDeal = true;
+//   if (featured === "true") query.isFeatured = true;
+//   if (recommended === "true") query.isRecommended = true;
+
+//   if (minPrice || maxPrice) {
+//     query.price = {};
+//     if (minPrice) query.price.$gte = Number(minPrice);
+//     if (maxPrice) query.price.$lte = Number(maxPrice);
+//   }
+
+//   let sortOption = { createdAt: -1 };
+
+//   if (sort === "price-low") sortOption = { price: 1 };
+//   if (sort === "price-high") sortOption = { price: -1 };
+//   if (sort === "rating") sortOption = { rating: -1 };
+//   if (sort === "newest") sortOption = { createdAt: -1 };
+
+//   return await Product.find(query)
+//     .populate("category", "name slug")
+//     .sort(sortOption);
+// };
+
+
+const getAllProducts = async (queryParams) => {
+  const {
+    search,
+    category,
+    minPrice,
+    maxPrice,
+    sort,
+    deal,
+    featured,
+    recommended,
+    brand,
+    rating,
+    verified,
+    page = 1,
+    limit = 10,
+  } = queryParams;
+
+  const query = {};
+
+  if (search) {
+    query.$or = [
+      { title: { $regex: search, $options: "i" } },
+      { brand: { $regex: search, $options: "i" } },
+      { tags: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  if (category) query.category = category;
+  if (brand) query.brand = { $in: brand.split(",") };
+  if (rating) query.rating = { $gte: Number(rating) };
+  if (verified === "true") query["supplier.verified"] = true;
+
+  if (deal === "true") query.isDeal = true;
+  if (featured === "true") query.isFeatured = true;
+  if (recommended === "true") query.isRecommended = true;
+
+  if (minPrice || maxPrice) {
+    query.price = {};
+    if (minPrice) query.price.$gte = Number(minPrice);
+    if (maxPrice) query.price.$lte = Number(maxPrice);
+  }
+
+  let sortOption = { createdAt: -1 };
+  if (sort === "price-low") sortOption = { price: 1 };
+  if (sort === "price-high") sortOption = { price: -1 };
+  if (sort === "rating") sortOption = { rating: -1 };
+  if (sort === "newest") sortOption = { createdAt: -1 };
+
+  const currentPage = Number(page);
+  const perPage = Number(limit);
+  const skip = (currentPage - 1) * perPage;
+
+  const total = await Product.countDocuments(query);
+
+  const products = await Product.find(query)
+    .populate("category", "name slug")
+    .sort(sortOption)
+    .skip(skip)
+    .limit(perPage);
+
+  return {
+    products,
+    total,
+    page: currentPage,
+    limit: perPage,
+    pages: Math.ceil(total / perPage),
+  };
+};
+
+const getProductById = async (id) => {
+  return await Product.findById(id).populate("category", "name slug");
+};
+
+const getProductBySlug = async (slug) => {
+  return await Product.findOne({ slug }).populate("category", "name slug");
+};
+
+const getProductFilterOptions = async (queryParams) => {
+  const { category } = queryParams;
+
+  const baseQuery = {};
+
+  if (category) {
+    baseQuery.category = category;
+  }
+
+  const brands = await Product.distinct("brand", baseQuery);
+
+  const priceStats = await Product.aggregate([
+    { $match: baseQuery },
+    {
+      $group: {
+        _id: null,
+        minPrice: { $min: "$price" },
+        maxPrice: { $max: "$price" },
+      },
+    },
+  ]);
+
+  return {
+    brands: brands.filter(Boolean),
+    priceRange: {
+      min: priceStats[0]?.minPrice || 0,
+      max: priceStats[0]?.maxPrice || 0,
+    },
+    ratings: [5, 4, 3, 2],
+  };
+};
+module.exports = {
+  getAllProducts,
+  getProductById,
+  getProductBySlug,
+  getProductFilterOptions,
+};
