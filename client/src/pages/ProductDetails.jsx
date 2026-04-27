@@ -1,5 +1,3 @@
-
-
 // import Header from "../components/layout/Header";
 // import Navbar from "../components/layout/Navbar";
 // import Breadcrumb from "../components/products/Breadcrumb";
@@ -71,7 +69,7 @@ function ProductDetails() {
 
         const relatedRes = await API.get("/products");
         const filteredRelated = relatedRes.data.data.filter(
-          (item) => item._id !== currentProduct._id
+          (item) => item._id !== currentProduct._id,
         );
 
         setRelatedProducts(filteredRelated.slice(0, 4));
@@ -92,7 +90,11 @@ function ProductDetails() {
 
       <main className="max-w-[1180px] mx-auto px-0 sm:px-4 py-0 sm:py-5">
         <div className="hidden sm:block">
-          <Breadcrumb />
+          <Breadcrumb
+            categoryId={product?.category?._id}
+            categoryName={product?.category?.name}
+            productTitle={product?.title}
+          />
         </div>
 
         {loading && (

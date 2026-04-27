@@ -3,12 +3,18 @@ const productService = require("./product.service");
 
 const getProducts = async (req, res, next) => {
   try {
-    const products = await productService.getAllProducts(req.query);
+    const result = await productService.getAllProducts(req.query);
 
     res.json({
       success: true,
-      count: products.length,
-      data: products,
+      count: result.products.length,
+      data: result.products,
+      pagination: {
+        total: result.total,
+        page: result.page,
+        limit: result.limit,
+        pages: result.pages,
+      },
     });
   } catch (error) {
     next(error);
@@ -50,9 +56,22 @@ const getProductBySlug = async (req, res, next) => {
     next(error);
   }
 };
+const getFilterOptions = async (req, res, next) => {
+  try {
+    const filters = await productService.getProductFilterOptions(req.query);
+
+    res.json({
+      success: true,
+      data: filters,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   getProducts,
   getProduct,
   getProductBySlug,
+  getFilterOptions,
 };

@@ -1,155 +1,7 @@
-
-
-// import Header from "../components/layout/Header";
-// import Navbar from "../components/layout/Navbar";
-// import Breadcrumb from "../components/products/Breadcrumb";
-// import Newsletter from "../components/home/Newsletter";
-// import Footer from "../components/home/Footer";
-// import FilterSidebar from "../components/products/FilterSidebar";
-// import ProductListTopBar from "../components/products/ProductListTopBar";
-// import ProductListCard from "../components/products/ProductListCard";
-// import ProductPagination from "../components/products/ProductPagination";
-// import MobileProductTop from "../components/products/MobileProductTop";
-// function ProductList() {
-//   const products = [
-//   {
-//     id: 1,
-//     title: "Canon Cmera EOS 2000, Black 10x zoom",
-//     price: "998.00",
-//     oldPrice: "1128.00",
-//     image: "https://img.icons8.com/color/200/iphone.png",
-//   },
-//   {
-//     id: 2,
-//     title: "GoPro HERO6 4K Action Camera - Black",
-//     price: "998.00",
-//     image: "https://img.icons8.com/color/200/smartphone-tablet.png",
-//   },
-//   {
-//     id: 3,
-//     title: "GoPro HERO6 4K Action Camera - Black",
-//     price: "998.00",
-//     image: "https://img.icons8.com/color/200/tablet.png",
-//   },
-//   {
-//     id: 4,
-//     title: "GoPro HERO6 4K Action Camera - Black",
-//     price: "998.00",
-//     image: "https://img.icons8.com/color/200/laptop.png",
-//   },
-//   {
-//     id: 5,
-//     title: "GoPro HERO6 4K Action Camera - Black",
-//     price: "998.00",
-//     oldPrice: "1128.00",
-//     image: "https://img.icons8.com/color/200/apple-watch.png",
-//   },
-//   {
-//     id: 6,
-//     title: "GoPro HERO6 4K Action Camera - Black",
-//     price: "998.00",
-//     image: "https://img.icons8.com/color/200/headphones.png",
-//   },
-// ];
-//   return (
-// //     <div className="bg-[#f7fafc] min-h-screen">
-// //       <Header />
-// //       <Navbar />
-
-// //       <main className="max-w-[1180px] mx-auto px-4 py-5">
-// //         <Breadcrumb />
-
-// //         <div className="grid grid-cols-1 lg:grid-cols-[230px_1fr] gap-5">
-// //           <FilterSidebar />
-
-// //           <section>
-// //             <ProductListTopBar />
-// //             <div className="space-y-3">
-// //   {products.map((product) => (
-// //     <ProductListCard key={product.id} product={product} />
-// //   ))}
-// // </div>
-// // <ProductPagination />
-// //           </section>
-// //         </div>
-// //       </main>
-
-// //       <Newsletter />
-// //       <Footer />
-// //     </div>
-// <div className="bg-[#f7fafc] min-h-screen pb-10">
-//   <div className="hidden md:block">
-//     <Header />
-//     <Navbar />
-//   </div>
-
-//   <MobileProductTop />
-
-//   <main className="max-w-[1180px] mx-auto px-3 md:px-4 py-3 md:py-5">
-//     <div className="hidden md:block">
-//       <Breadcrumb />
-//     </div>
-
-//     <div className="grid grid-cols-1 lg:grid-cols-[230px_1fr] gap-5">
-//       <FilterSidebar />
-
-//       <section>
-//         <div className="hidden md:block">
-//           <ProductListTopBar />
-//         </div>
-
-//         <div className="space-y-2 md:space-y-3">
-//           {products.map((product) => (
-//             <ProductListCard key={product.id} product={product} />
-//           ))}
-//         </div>
-
-//         <div className="hidden md:block">
-//           <ProductPagination />
-//         </div>
-//       </section>
-//     </div>
-
-//     <div className="md:hidden mt-6">
-//   <h2 className="text-[18px] font-semibold mb-3">You may also like</h2>
-
-//   <div className="flex gap-3 overflow-x-auto pb-3">
-//     {products.slice(0, 4).map((product) => (
-//       <div
-//         key={product.id}
-//         className="min-w-[150px] bg-white border border-gray-200 rounded-md p-3"
-//       >
-//         <div className="h-[120px] flex items-center justify-center">
-//           <img
-//             src={product.image}
-//             alt={product.title}
-//             className="max-h-[100px] object-contain"
-//           />
-//         </div>
-
-//         <p className="font-semibold text-gray-900 mt-2">$10.30</p>
-//         <p className="text-gray-500 text-sm leading-snug">
-//           Solid Backpack blue jeans large size
-//         </p>
-//       </div>
-//     ))}
-//   </div>
-//   <div className="md:hidden h-10"></div>
-// </div>
-//   </main>
-
-//   <div className="hidden md:block">
-//     <Newsletter />
-//     <Footer />
-//   </div>
-// </div>
-//   );
-// }
-
-// export default ProductList;
-
+//client/src/pages/ProductList.jsx
 import { useEffect, useState } from "react";
-
+import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Navbar from "../components/layout/Navbar";
 import Breadcrumb from "../components/products/Breadcrumb";
@@ -158,14 +10,93 @@ import Footer from "../components/home/Footer";
 import FilterSidebar from "../components/products/FilterSidebar";
 import ProductListTopBar from "../components/products/ProductListTopBar";
 import ProductListCard from "../components/products/ProductListCard";
+import ProductGridCard from "../components/products/ProductGridCard";
 import ProductPagination from "../components/products/ProductPagination";
 import MobileProductTop from "../components/products/MobileProductTop";
 import API from "../api/api";
-
 function ProductList() {
+  const [searchParams] = useSearchParams();
+
+  const urlCategory = searchParams.get("category") || "";
+  const search = searchParams.get("search") || "";
+
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [filterOptions, setFilterOptions] = useState({
+    brands: [],
+    ratings: [5, 4, 3, 2],
+    priceRange: { min: 0, max: 0 },
+  });
+
+  const [view, setView] = useState("list");
+  const [sort, setSort] = useState("featured");
+
+  const [selectedCategory, setSelectedCategory] = useState(urlCategory);
+  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedRating, setSelectedRating] = useState("");
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
+
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [priceFilter, setPriceFilter] = useState({ min: "", max: "" });
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 10;
+
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10,
+    pages: 1,
+  });
+
+  useEffect(() => {
+    setSelectedCategory(urlCategory);
+    setSelectedBrands([]);
+    setSelectedRating("");
+    setVerifiedOnly(false);
+    setMinPrice("");
+    setMaxPrice("");
+    setPriceFilter({ min: "", max: "" });
+  }, [urlCategory]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await API.get("/categories");
+        setCategories(res.data.data || []);
+      } catch (err) {
+        console.log("Failed to load categories");
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchFilterOptions = async () => {
+      try {
+        const params = new URLSearchParams();
+
+        if (selectedCategory) {
+          params.append("category", selectedCategory);
+        }
+
+        const res = await API.get(
+          `/products/filter-options?${params.toString()}`,
+        );
+        setFilterOptions(res.data.data);
+      } catch (err) {
+        console.log("Failed to load filter options");
+      }
+    };
+
+    fetchFilterOptions();
+  }, [selectedCategory]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -173,8 +104,27 @@ function ProductList() {
         setLoading(true);
         setError("");
 
-        const res = await API.get("/products");
+        const params = new URLSearchParams();
+
+        if (sort && sort !== "featured") params.append("sort", sort);
+        if (selectedCategory) params.append("category", selectedCategory);
+        if (priceFilter.min) params.append("minPrice", priceFilter.min);
+        if (priceFilter.max) params.append("maxPrice", priceFilter.max);
+        if (search) params.append("search", search);
+        if (selectedBrands.length > 0) {
+          params.append("brand", selectedBrands.join(","));
+        }
+
+        if (selectedRating) params.append("rating", selectedRating);
+        if (verifiedOnly) params.append("verified", "true");
+        params.append("page", page);
+        params.append("limit", limit);
+
+        const res = await API.get(`/products?${params.toString()}`);
         setProducts(res.data.data || []);
+        setPagination(
+          res.data.pagination || { total: 0, page: 1, limit: 10, pages: 1 },
+        );
       } catch (err) {
         setError("Failed to load products.");
       } finally {
@@ -183,7 +133,100 @@ function ProductList() {
     };
 
     fetchProducts();
-  }, []);
+  }, [
+    sort,
+    selectedCategory,
+    priceFilter,
+    search,
+    selectedBrands,
+    selectedRating,
+    verifiedOnly,
+    page,
+    limit,
+  ]);
+
+  const resetPageToOne = () => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", 1);
+    navigate(`/products/list?${params.toString()}`);
+  };
+
+  const toggleBrand = (brand) => {
+    setSelectedBrands((prev) =>
+      prev.includes(brand)
+        ? prev.filter((item) => item !== brand)
+        : [...prev, brand],
+    );
+
+    resetPageToOne();
+  };
+
+  // const applyPriceFilter = () => {
+  //   setPriceFilter({
+  //     min: minPrice,
+  //     max: maxPrice,
+  //   });
+  // };
+  const applyPriceFilter = () => {
+    setPriceFilter({
+      min: minPrice,
+      max: maxPrice,
+    });
+
+    resetPageToOne();
+  };
+
+  const clearFilters = () => {
+    setSelectedCategory("");
+    setSelectedBrands([]);
+    setSelectedRating("");
+    setVerifiedOnly(false);
+    setMinPrice("");
+    setMaxPrice("");
+    setPriceFilter({ min: "", max: "" });
+    setSort("featured");
+    resetPageToOne();
+  };
+
+  // const removeBrandFilter = (brand) => {
+  //   setSelectedBrands((prev) => prev.filter((item) => item !== brand));
+  // };
+
+  const removeBrandFilter = (brand) => {
+    setSelectedBrands((prev) => prev.filter((item) => item !== brand));
+    resetPageToOne();
+  };
+  const selectedCategoryName =
+    categories.find((cat) => cat._id === selectedCategory)?.name || "";
+
+  const handlePageChange = (newPage) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", newPage);
+    navigate(`/products/list?${params.toString()}`);
+  };
+
+  const handleLimitChange = (newLimit) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("limit", newLimit);
+    params.set("page", 1);
+    navigate(`/products/list?${params.toString()}`);
+  };
+
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategory(categoryId);
+
+    const params = new URLSearchParams(searchParams);
+
+    if (categoryId) {
+      params.set("category", categoryId);
+    } else {
+      params.delete("category");
+    }
+
+    params.set("page", 1);
+
+    navigate(`/products/list?${params.toString()}`);
+  };
 
   return (
     <div className="bg-[#f7fafc] min-h-screen pb-10">
@@ -196,16 +239,144 @@ function ProductList() {
 
       <main className="max-w-[1180px] mx-auto px-3 md:px-4 py-3 md:py-5">
         <div className="hidden md:block">
-          <Breadcrumb />
+          <Breadcrumb
+            categoryId={selectedCategory}
+            categoryName={selectedCategoryName}
+            search={search}
+          />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[230px_1fr] gap-5">
-          <FilterSidebar />
+          {/* <FilterSidebar
+            categories={categories}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={handleCategoryChange}
+            filterOptions={filterOptions}
+            selectedBrands={selectedBrands}
+            toggleBrand={toggleBrand}
+            selectedRating={selectedRating}
+            setSelectedRating={setSelectedRating}
+            verifiedOnly={verifiedOnly}
+            setVerifiedOnly={setVerifiedOnly}
+            minPrice={minPrice}
+            setMinPrice={setMinPrice}
+            maxPrice={maxPrice}
+            setMaxPrice={setMaxPrice}
+            applyPriceFilter={applyPriceFilter}
+            clearFilters={clearFilters}
+          /> */}
+
+          <FilterSidebar
+            categories={categories}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={handleCategoryChange}
+            filterOptions={filterOptions}
+            selectedBrands={selectedBrands}
+            toggleBrand={toggleBrand}
+            selectedRating={selectedRating}
+            setSelectedRating={(value) => {
+              setSelectedRating(value);
+              resetPageToOne();
+            }}
+            verifiedOnly={verifiedOnly}
+            setVerifiedOnly={(value) => {
+              setVerifiedOnly(value);
+              resetPageToOne();
+            }}
+            minPrice={minPrice}
+            setMinPrice={setMinPrice}
+            maxPrice={maxPrice}
+            setMaxPrice={setMaxPrice}
+            applyPriceFilter={applyPriceFilter}
+            clearFilters={clearFilters}
+          />
 
           <section>
             <div className="hidden md:block">
-              <ProductListTopBar />
+              <ProductListTopBar
+                view={view}
+                setView={setView}
+                productsCount={pagination.total}
+                sort={sort}
+                setSort={(value) => {
+                  setSort(value);
+                  resetPageToOne();
+                }}
+                verifiedOnly={verifiedOnly}
+                setVerifiedOnly={(value) => {
+                  setVerifiedOnly(value);
+                  resetPageToOne();
+                }}
+                title={
+                  search
+                    ? `Search: ${search}`
+                    : selectedCategoryName || "Products"
+                }
+              />
             </div>
+
+            {(selectedBrands.length > 0 ||
+              selectedRating ||
+              verifiedOnly ||
+              priceFilter.min ||
+              priceFilter.max) && (
+              <div className="bg-white border border-gray-200 rounded-md mb-3 px-3 py-2 flex flex-wrap items-center gap-2">
+                {selectedBrands.map((brand) => (
+                  <button
+                    key={brand}
+                    onClick={() => removeBrandFilter(brand)}
+                    className="border border-blue-300 text-blue-600 rounded-md px-3 py-1 text-sm"
+                  >
+                    {brand} ×
+                  </button>
+                ))}
+
+                {selectedRating && (
+                  <button
+                    onClick={() => {
+                      setSelectedRating("");
+                      resetPageToOne();
+                    }}
+                    className="border border-blue-300 text-blue-600 rounded-md px-3 py-1 text-sm"
+                  >
+                    {selectedRating}+ star ×
+                  </button>
+                )}
+
+                {verifiedOnly && (
+                  <button
+                    onClick={() => {
+                      setVerifiedOnly(false);
+                      resetPageToOne();
+                    }}
+                    className="border border-blue-300 text-blue-600 rounded-md px-3 py-1 text-sm"
+                  >
+                    Verified only ×
+                  </button>
+                )}
+
+                {(priceFilter.min || priceFilter.max) && (
+                  <button
+                    onClick={() => {
+                      setMinPrice("");
+                      setMaxPrice("");
+                      setPriceFilter({ min: "", max: "" });
+                      resetPageToOne();
+                    }}
+                    className="border border-blue-300 text-blue-600 rounded-md px-3 py-1 text-sm"
+                  >
+                    Price {priceFilter.min || 0} - {priceFilter.max || "∞"} ×
+                  </button>
+                )}
+
+                <button
+                  onClick={clearFilters}
+                  className="text-blue-600 text-sm ml-2"
+                >
+                  Clear all filter
+                </button>
+              </div>
+            )}
 
             {loading && (
               <div className="bg-white border rounded-md p-6 text-center text-gray-500">
@@ -219,7 +390,13 @@ function ProductList() {
               </div>
             )}
 
-            {!loading && !error && (
+            {!loading && !error && products.length === 0 && (
+              <div className="bg-white border rounded-md p-6 text-center text-gray-500">
+                No products found.
+              </div>
+            )}
+
+            {!loading && !error && products.length > 0 && view === "list" && (
               <div className="space-y-2 md:space-y-3">
                 {products.map((product) => (
                   <ProductListCard key={product._id} product={product} />
@@ -227,47 +404,25 @@ function ProductList() {
               </div>
             )}
 
+            {!loading && !error && products.length > 0 && view === "grid" && (
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+                {products.map((product) => (
+                  <ProductGridCard key={product._id} product={product} />
+                ))}
+              </div>
+            )}
+
             <div className="hidden md:block">
-              <ProductPagination />
+              <ProductPagination
+                page={pagination.page}
+                pages={pagination.pages}
+                limit={pagination.limit}
+                onPageChange={handlePageChange}
+                onLimitChange={handleLimitChange}
+              />
             </div>
           </section>
         </div>
-
-        {!loading && !error && (
-          <div className="md:hidden mt-6">
-            <h2 className="text-[18px] font-semibold mb-3">You may also like</h2>
-
-            <div className="flex gap-3 overflow-x-auto pb-3">
-              {products.slice(0, 4).map((product) => {
-                const image = product.images?.[0] || product.image;
-
-                return (
-                  <div
-                    key={product._id}
-                    className="min-w-[150px] bg-white border border-gray-200 rounded-md p-3"
-                  >
-                    <div className="h-[120px] flex items-center justify-center">
-                      <img
-                        src={image}
-                        alt={product.title}
-                        className="max-h-[100px] object-contain"
-                      />
-                    </div>
-
-                    <p className="font-semibold text-gray-900 mt-2">
-                      ${Number(product.price).toFixed(2)}
-                    </p>
-                    <p className="text-gray-500 text-sm leading-snug line-clamp-2">
-                      {product.title}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="md:hidden h-10"></div>
-          </div>
-        )}
       </main>
 
       <div className="hidden md:block">
