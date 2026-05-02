@@ -1,6 +1,6 @@
 
 // // server/src/seed/seed.js
-// require("dotenv").config();
+// require("dotenv").config({ path: __dirname + "/../../.env" });
 
 // const connectDB = require("../../config/db");
 
@@ -410,6 +410,7 @@
 
 // seedData();
 
+
 // server/src/seed/seed.js
 require("dotenv").config({ path: __dirname + "/../../.env" });
 
@@ -456,6 +457,11 @@ const seedData = async () => {
         isFeatured: true,
         isRecommended: true,
         isDeal: true,
+        isHotOffer: true,
+        isGiftBox: true,
+        isNewArrival: true,
+        isTopSelling: true,
+        isActive: true,
         supplier: {
           name: "Guanjxi Trading LLC",
           country: "Germany",
@@ -482,7 +488,13 @@ const seedData = async () => {
         description: "Comfortable wireless headphones for daily use.",
         brand: "Sony",
         isFeatured: true,
+        isRecommended: true,
         isDeal: true,
+        isHotOffer: true,
+        isGiftBox: false,
+        isNewArrival: true,
+        isTopSelling: true,
+        isActive: true,
         supplier: {
           name: "Audio Supplier Ltd",
           country: "China",
@@ -508,7 +520,14 @@ const seedData = async () => {
         stock: 10,
         description: "Powerful kitchen mixer for home cooking.",
         brand: "Philips",
+        isFeatured: false,
         isRecommended: true,
+        isDeal: false,
+        isHotOffer: false,
+        isGiftBox: true,
+        isNewArrival: false,
+        isTopSelling: true,
+        isActive: true,
         supplier: {
           name: "Home Supplies Inc",
           country: "Turkey",
@@ -534,7 +553,14 @@ const seedData = async () => {
         stock: 30,
         description: "Professional gaming controller with smooth grip.",
         brand: "Logitech",
+        isFeatured: false,
         isRecommended: true,
+        isDeal: true,
+        isHotOffer: true,
+        isGiftBox: true,
+        isNewArrival: false,
+        isTopSelling: true,
+        isActive: true,
         supplier: {
           name: "TechZone Suppliers",
           country: "United States",
@@ -561,6 +587,13 @@ const seedData = async () => {
         description: "Durable laptop backpack for office and travel.",
         brand: "BagPro",
         isFeatured: true,
+        isRecommended: true,
+        isDeal: false,
+        isHotOffer: false,
+        isGiftBox: true,
+        isNewArrival: true,
+        isTopSelling: false,
+        isActive: true,
         supplier: {
           name: "Fashion Hub",
           country: "Vietnam",
@@ -586,7 +619,14 @@ const seedData = async () => {
         stock: 60,
         description: "Soft cotton casual t-shirt for men.",
         brand: "CottonWear",
+        isFeatured: false,
+        isRecommended: true,
         isDeal: true,
+        isHotOffer: true,
+        isGiftBox: false,
+        isNewArrival: true,
+        isTopSelling: false,
+        isActive: true,
         supplier: {
           name: "Textile Market",
           country: "Pakistan",
@@ -613,6 +653,13 @@ const seedData = async () => {
         description: "Premium car tire set for better road grip.",
         brand: "RoadMax",
         isFeatured: true,
+        isRecommended: false,
+        isDeal: false,
+        isHotOffer: false,
+        isGiftBox: false,
+        isNewArrival: false,
+        isTopSelling: true,
+        isActive: true,
         supplier: {
           name: "Auto Parts Global",
           country: "Japan",
@@ -638,7 +685,14 @@ const seedData = async () => {
         stock: 18,
         description: "Comfortable ergonomic office chair.",
         brand: "ComfortPro",
+        isFeatured: false,
         isRecommended: true,
+        isDeal: true,
+        isHotOffer: true,
+        isGiftBox: true,
+        isNewArrival: false,
+        isTopSelling: false,
+        isActive: true,
         supplier: {
           name: "Furniture House",
           country: "Malaysia",
@@ -664,7 +718,14 @@ const seedData = async () => {
         stock: 75,
         description: "Smooth wireless mouse for laptop and desktop.",
         brand: "Logitech",
+        isFeatured: false,
+        isRecommended: true,
         isDeal: true,
+        isHotOffer: true,
+        isGiftBox: false,
+        isNewArrival: true,
+        isTopSelling: true,
+        isActive: true,
         supplier: {
           name: "Digital Accessories Co",
           country: "China",
@@ -692,6 +753,12 @@ const seedData = async () => {
         brand: "KeyMaster",
         isFeatured: true,
         isRecommended: true,
+        isDeal: true,
+        isHotOffer: true,
+        isGiftBox: false,
+        isNewArrival: true,
+        isTopSelling: true,
+        isActive: true,
         supplier: {
           name: "PC Gear Supply",
           country: "Taiwan",
@@ -755,14 +822,14 @@ const seedData = async () => {
           index % 6 === 0
             ? 0
             : index % 6 === 1
-            ? 4
-            : index % 6 === 2
-            ? 1
-            : index % 6 === 3
-            ? 2
-            : index % 6 === 4
-            ? 3
-            : 5;
+              ? 4
+              : index % 6 === 2
+                ? 1
+                : index % 6 === 3
+                  ? 2
+                  : index % 6 === 4
+                    ? 3
+                    : 5;
 
         return {
           title: name,
@@ -785,6 +852,11 @@ const seedData = async () => {
           isFeatured: index % 5 === 0,
           isRecommended: index % 4 === 0,
           isDeal: index % 3 === 0,
+          isHotOffer: index % 6 === 0,
+          isGiftBox: index % 7 === 0,
+          isNewArrival: index % 8 === 0,
+          isTopSelling: index % 9 === 0,
+          isActive: true,
           supplier: {
             name: [
               "Global Trade Ltd",

@@ -19,6 +19,13 @@ function ProductList() {
 
   const urlCategory = searchParams.get("category") || "";
   const search = searchParams.get("search") || "";
+  const deal = searchParams.get("deal") || "";
+  const featured = searchParams.get("featured") || "";
+  const recommended = searchParams.get("recommended") || "";
+  const hotOffer = searchParams.get("hotOffer") || "";
+  const giftBox = searchParams.get("giftBox") || "";
+  const newArrival = searchParams.get("newArrival") || "";
+  const topSelling = searchParams.get("topSelling") || "";
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -85,6 +92,13 @@ function ProductList() {
         if (selectedCategory) {
           params.append("category", selectedCategory);
         }
+        if (deal) params.append("deal", deal);
+        if (featured) params.append("featured", featured);
+        if (recommended) params.append("recommended", recommended);
+        if (hotOffer) params.append("hotOffer", hotOffer);
+        if (giftBox) params.append("giftBox", giftBox);
+        if (newArrival) params.append("newArrival", newArrival);
+        if (topSelling) params.append("topSelling", topSelling);
 
         const res = await API.get(
           `/products/filter-options?${params.toString()}`,
@@ -98,52 +112,88 @@ function ProductList() {
     fetchFilterOptions();
   }, [selectedCategory]);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        setError("");
+  useEffect(
+    () => {
+      const fetchProducts = async () => {
+        try {
+          setLoading(true);
+          setError("");
 
-        const params = new URLSearchParams();
+          const params = new URLSearchParams();
 
-        if (sort && sort !== "featured") params.append("sort", sort);
-        if (selectedCategory) params.append("category", selectedCategory);
-        if (priceFilter.min) params.append("minPrice", priceFilter.min);
-        if (priceFilter.max) params.append("maxPrice", priceFilter.max);
-        if (search) params.append("search", search);
-        if (selectedBrands.length > 0) {
-          params.append("brand", selectedBrands.join(","));
+          if (sort && sort !== "featured") params.append("sort", sort);
+          if (selectedCategory) params.append("category", selectedCategory);
+          if (priceFilter.min) params.append("minPrice", priceFilter.min);
+          if (priceFilter.max) params.append("maxPrice", priceFilter.max);
+          if (search) params.append("search", search);
+          if (selectedBrands.length > 0) {
+            params.append("brand", selectedBrands.join(","));
+          }
+
+          // if (selectedRating) params.append("rating", selectedRating);
+          // if (verifiedOnly) params.append("verified", "true");
+          // params.append("page", page);
+          // params.append("limit", limit);
+
+          if (selectedRating) params.append("rating", selectedRating);
+          if (verifiedOnly) params.append("verified", "true");
+
+          if (deal) params.append("deal", deal);
+          if (featured) params.append("featured", featured);
+          if (recommended) params.append("recommended", recommended);
+          if (hotOffer) params.append("hotOffer", hotOffer);
+          if (giftBox) params.append("giftBox", giftBox);
+          if (newArrival) params.append("newArrival", newArrival);
+          if (topSelling) params.append("topSelling", topSelling);
+
+          params.append("page", page);
+          params.append("limit", limit);
+
+          const res = await API.get(`/products?${params.toString()}`);
+          setProducts(res.data.data || []);
+          setPagination(
+            res.data.pagination || { total: 0, page: 1, limit: 10, pages: 1 },
+          );
+        } catch (err) {
+          setError("Failed to load products.");
+        } finally {
+          setLoading(false);
         }
+      };
 
-        if (selectedRating) params.append("rating", selectedRating);
-        if (verifiedOnly) params.append("verified", "true");
-        params.append("page", page);
-        params.append("limit", limit);
+      fetchProducts();
+    },
+    // [
+    //   sort,
+    //   selectedCategory,
+    //   priceFilter,
+    //   search,
+    //   selectedBrands,
+    //   selectedRating,
+    //   verifiedOnly,
+    //   page,
+    //   limit,
+    // ]
 
-        const res = await API.get(`/products?${params.toString()}`);
-        setProducts(res.data.data || []);
-        setPagination(
-          res.data.pagination || { total: 0, page: 1, limit: 10, pages: 1 },
-        );
-      } catch (err) {
-        setError("Failed to load products.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, [
-    sort,
-    selectedCategory,
-    priceFilter,
-    search,
-    selectedBrands,
-    selectedRating,
-    verifiedOnly,
-    page,
-    limit,
-  ]);
+    [
+      sort,
+      selectedCategory,
+      priceFilter,
+      search,
+      selectedBrands,
+      selectedRating,
+      verifiedOnly,
+      deal,
+      featured,
+      recommended,
+      hotOffer,
+      giftBox,
+      newArrival,
+      topSelling,
+      page,
+      limit,
+    ],
+  );
 
   const resetPageToOne = () => {
     const params = new URLSearchParams(searchParams);
@@ -217,6 +267,15 @@ function ProductList() {
 
     const params = new URLSearchParams(searchParams);
 
+    // remove navbar/special section filters when user chooses a category
+    params.delete("hotOffer");
+    params.delete("giftBox");
+    params.delete("deal");
+    params.delete("featured");
+    params.delete("recommended");
+    params.delete("newArrival");
+    params.delete("topSelling");
+
     if (categoryId) {
       params.set("category", categoryId);
     } else {
@@ -226,6 +285,20 @@ function ProductList() {
     params.set("page", 1);
 
     navigate(`/products/list?${params.toString()}`);
+  };
+
+  const getPageTitle = () => {
+    if (search) return `Search: ${search}`;
+    if (selectedCategoryName) return selectedCategoryName;
+    if (hotOffer === "true") return "Hot offers";
+    if (giftBox === "true") return "Gift boxes";
+    if (deal === "true") return "Deals and offers";
+    if (featured === "true") return "Featured products";
+    if (recommended === "true") return "Recommended items";
+    if (newArrival === "true") return "New arrivals";
+    if (topSelling === "true") return "Top selling";
+
+    return "Products";
   };
 
   return (
@@ -307,11 +380,7 @@ function ProductList() {
                   setVerifiedOnly(value);
                   resetPageToOne();
                 }}
-                title={
-                  search
-                    ? `Search: ${search}`
-                    : selectedCategoryName || "Products"
-                }
+                title={getPageTitle()}
               />
             </div>
 
