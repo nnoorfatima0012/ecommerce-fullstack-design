@@ -120,10 +120,34 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isHotOffer: {
+      type: Boolean,
+      default: false,
+    },
+
+    isGiftBox: {
+      type: Boolean,
+      default: false,
+    },
+
+    isNewArrival: {
+      type: Boolean,
+      default: false,
+    },
+
+    isTopSelling: {
+      type: Boolean,
+      default: false,
+    },
+
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("Product", productSchema);

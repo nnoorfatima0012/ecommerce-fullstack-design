@@ -1,10 +1,33 @@
-// //ecommerce-fullstack-design/src/components/layout/Navbar.jsx
+// // src/components/layout/Navbar.jsx
 // import { Menu, ChevronDown } from "lucide-react";
 
 // function Navbar() {
+//   const mobileCategories = [
+//     "All category",
+//     "Gadgets",
+//     "Clothes",
+//     "Accessory",
+//     "Electronics",
+//   ];
+
 //   return (
 //     <div className="bg-white border-b">
-//       <div className="max-w-[1180px] mx-auto px-4 h-[56px] flex items-center justify-between">
+//       {/* Mobile category chips */}
+//       <div className="md:hidden px-4 py-3 overflow-x-auto">
+//         <div className="flex gap-2 min-w-max">
+//           {mobileCategories.map((item) => (
+//             <button
+//               key={item}
+//               className="bg-gray-100 text-blue-600 px-4 py-2 rounded-md whitespace-nowrap"
+//             >
+//               {item}
+//             </button>
+//           ))}
+//         </div>
+//       </div>
+
+//       {/* Desktop navbar */}
+//       <div className="hidden md:flex max-w-[1180px] mx-auto px-4 h-[56px] items-center justify-between">
 //         <div className="flex items-center gap-7 text-[15px] text-gray-800">
 //           <div className="flex items-center gap-2 font-medium">
 //             <Menu size={22} />
@@ -42,14 +65,21 @@
 // export default Navbar;
 
 import { Menu, ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
+  const navigate = useNavigate();
+
+  const goToProducts = (query = "") => {
+    navigate(query ? `/products/list?${query}` : "/products/list");
+  };
+
   const mobileCategories = [
-    "All category",
-    "Gadgets",
-    "Clothes",
-    "Accessory",
-    "Electronics",
+    { label: "All category", query: "" },
+    { label: "Hot offers", query: "hotOffer=true" },
+    { label: "Gift boxes", query: "giftBox=true" },
+    { label: "Deals", query: "deal=true" },
+    { label: "Recommended", query: "recommended=true" },
   ];
 
   return (
@@ -59,10 +89,11 @@ function Navbar() {
         <div className="flex gap-2 min-w-max">
           {mobileCategories.map((item) => (
             <button
-              key={item}
+              key={item.label}
+              onClick={() => goToProducts(item.query)}
               className="bg-gray-100 text-blue-600 px-4 py-2 rounded-md whitespace-nowrap"
             >
-              {item}
+              {item.label}
             </button>
           ))}
         </div>
@@ -71,15 +102,30 @@ function Navbar() {
       {/* Desktop navbar */}
       <div className="hidden md:flex max-w-[1180px] mx-auto px-4 h-[56px] items-center justify-between">
         <div className="flex items-center gap-7 text-[15px] text-gray-800">
-          <div className="flex items-center gap-2 font-medium">
+          <button
+            type="button"
+            onClick={() => goToProducts()}
+            className="flex items-center gap-2 font-medium"
+          >
             <Menu size={22} />
             <span>All category</span>
-          </div>
+          </button>
 
-          <span>Hot offers</span>
-          <span>Gift boxes</span>
-          <span>Projects</span>
-          <span>Menu item</span>
+          <button type="button" onClick={() => goToProducts("hotOffer=true")}>
+            Hot offers
+          </button>
+
+          <button type="button" onClick={() => goToProducts("giftBox=true")}>
+            Gift boxes
+          </button>
+
+          <button type="button" onClick={() => goToProducts("featured=true")}>
+            Projects
+          </button>
+
+          <button type="button" onClick={() => goToProducts("recommended=true")}>
+            Menu item
+          </button>
 
           <div className="flex items-center gap-1">
             <span>Help</span>

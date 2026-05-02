@@ -34,6 +34,34 @@ const protect = async (req, res, next) => {
   }
 };
 
+const optionalAuth = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return next();
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = verifyAccessToken(token);
+
+    const user = await User.findById(decoded.id);
+
+    if (user && user.isActive) {
+      req.user = {
+        id: user._id,
+        role: user.role,
+        email: user.email,
+        name: user.name,
+      };
+    }
+
+    next();
+  } catch (error) {
+    next();
+  }
+};
+
 const adminOnly = (req, res, next) => {
   if (req.user && req.user.role === "admin") {
     return next();
@@ -45,5 +73,6 @@ const adminOnly = (req, res, next) => {
 
 module.exports = {
   protect,
+  optionalAuth,
   adminOnly,
 };

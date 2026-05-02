@@ -69,9 +69,104 @@ const getFilterOptions = async (req, res, next) => {
   }
 };
 
+const createProduct = async (req, res, next) => {
+  try {
+    const product = await productService.createProduct(req.body);
+
+    res.status(201).json({
+      success: true,
+      message: "Product created successfully",
+      data: product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateProduct = async (req, res, next) => {
+  try {
+    const product = await productService.updateProduct(req.params.id, req.body);
+
+    if (!product) {
+      res.status(404);
+      throw new Error("Product not found");
+    }
+
+    res.json({
+      success: true,
+      message: "Product updated successfully",
+      data: product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteProduct = async (req, res, next) => {
+  try {
+    const product = await productService.deleteProduct(req.params.id);
+
+    if (!product) {
+      res.status(404);
+      throw new Error("Product not found");
+    }
+
+    res.json({
+      success: true,
+      message: "Product hidden successfully",
+      data: product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const restoreProduct = async (req, res, next) => {
+  try {
+    const product = await productService.restoreProduct(req.params.id);
+
+    if (!product) {
+      res.status(404);
+      throw new Error("Product not found");
+    }
+
+    res.json({
+      success: true,
+      message: "Product restored successfully",
+      data: product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const permanentDeleteProduct = async (req, res, next) => {
+  try {
+    const product = await productService.permanentDeleteProduct(req.params.id);
+
+    if (!product) {
+      res.status(404);
+      throw new Error("Product not found");
+    }
+
+    res.json({
+      success: true,
+      message: "Product deleted permanently",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 module.exports = {
   getProducts,
   getProduct,
   getProductBySlug,
   getFilterOptions,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  restoreProduct,
+  permanentDeleteProduct,
 };

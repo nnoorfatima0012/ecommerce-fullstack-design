@@ -1,14 +1,17 @@
-import { useState } from "react";
+//client/src/pages/Checkout.jsx
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/home/Footer";
 import API from "../api/api";
 import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
 
 function Checkout() {
   const navigate = useNavigate();
   const { cartItems, subtotal, clearCart } = useCart();
+  const { user, isAuthenticated } = useAuth();
 
   const discount = subtotal > 100 ? 20 : 0;
   const tax = subtotal * 0.05;
@@ -23,6 +26,16 @@ function Checkout() {
     postalCode: "",
     paymentMethod: "cash_on_delivery",
   });
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      setFormData((prev) => ({
+        ...prev,
+        fullName: prev.fullName || user.name || "",
+        email: prev.email || user.email || "",
+      }));
+    }
+  }, [isAuthenticated, user]);
 
   const [loading, setLoading] = useState(false);
 
@@ -70,8 +83,11 @@ function Checkout() {
       const res = await API.post("/orders", orderPayload);
 
       toast.success(res.data.message || "Order placed successfully");
+
+      sessionStorage.setItem("lastOrderPhone", formData.phone);
+
       clearCart();
-      navigate("/");
+      navigate(`/order-success/${res.data.data.orderNumber}`);
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to place order");
     } finally {
@@ -84,16 +100,22 @@ function Checkout() {
       <Header />
 
       <main className="max-w-[1180px] mx-auto px-4 py-6">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-5">
-          Checkout
-        </h1>
+        <h1 className="text-2xl font-semibold text-gray-900 mb-5">Checkout</h1>
 
         <form
           onSubmit={handlePlaceOrder}
           className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5"
         >
           <section className="bg-white border border-gray-200 rounded-md p-5">
-            <h2 className="text-lg font-semibold mb-4">Customer details</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Customer details</h2>
+
+              {isAuthenticated && (
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                  Logged in as {user?.name}
+                </span>
+              )}
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input

@@ -11,6 +11,14 @@ import Register from "./pages/Register";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminRoute from "./routes/AdminRoute";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminProducts from "./pages/admin/AdminProducts";
+import AdminProductForm from "./pages/admin/AdminProductForm";
+import OrderSuccess from "./pages/OrderSuccess";
+import TrackOrder from "./pages/TrackOrder";
+import MyOrders from "./pages/MyOrders";
+import MyOrderDetails from "./pages/MyOrderDetails";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -30,6 +38,71 @@ function App() {
             <AdminRoute>
               <AdminDashboard />
             </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/orders"
+          element={
+            <AdminRoute>
+              <AdminOrders />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin/products"
+          element={
+            <AdminRoute>
+              <AdminProducts />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin/products/create"
+          element={
+            <AdminRoute>
+              <AdminProductForm />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin/products/:id/edit"
+          element={
+            <AdminRoute>
+              <AdminProductForm />
+            </AdminRoute>
+          }
+        />
+
+        <Route path="/order-success/:orderNumber" element={<OrderSuccess />} />
+        <Route path="/track-order" element={<TrackOrder />} />
+
+        <Route
+          path="/my-orders"
+          element={
+            <ProtectedRoute>
+              <MyOrders />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/my-orders/:id"
+          element={
+            <ProtectedRoute>
+              <MyOrderDetails />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
           }
         />
       </Routes>

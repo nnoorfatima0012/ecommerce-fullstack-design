@@ -1,3 +1,5 @@
+
+//server/src/features/orders/order.model.js
 const mongoose = require("mongoose");
 
 const orderItemSchema = new mongoose.Schema(
@@ -17,6 +19,17 @@ const orderItemSchema = new mongoose.Schema(
 
 const orderSchema = new mongoose.Schema(
   {
+    orderNumber: {
+      type: String,
+      unique: true,
+      index: true,
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+
     customer: {
       fullName: { type: String, required: true },
       email: { type: String, required: true },
@@ -41,11 +54,33 @@ const orderSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"],
+      enum: [
+        "pending",
+        "confirmed",
+        "processing",
+        "shipped",
+        "delivered",
+        "cancelled",
+      ],
       default: "pending",
     },
   },
   { timestamps: true }
 );
+
+orderSchema.pre("save", function () {
+  if (!this.orderNumber) {
+    const date = new Date();
+
+    const datePart = date.toISOString().slice(2, 10).replaceAll("-", "");
+
+    const randomPart = Math.random()
+      .toString(36)
+      .substring(2, 8)
+      .toUpperCase();
+
+    this.orderNumber = `ORD-${datePart}-${randomPart}`;
+  }
+});
 
 module.exports = mongoose.model("Order", orderSchema);
