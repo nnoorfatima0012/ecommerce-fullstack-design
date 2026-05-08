@@ -1,3 +1,4 @@
+//server/src/features/auth/auth.controller.js
 const authService = require("./auth.service");
 
 const cookieOptions = {
@@ -83,11 +84,24 @@ const me = async (req, res, next) => {
     next(error);
   }
 };
+const updateProfile = async (req, res, next) => {
+  try {
+    const user = await authService.updateProfile(req.user.id, req.body);
 
+    res.json({
+      success: true,
+      message: "Profile updated successfully",
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   register,
   login,
   refresh,
   logout,
   me,
+  updateProfile,
 };

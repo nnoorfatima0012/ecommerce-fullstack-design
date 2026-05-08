@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import Header from "../components/layout/Header";
 import Footer from "../components/home/Footer";
 import API from "../api/api";
+import OrderStatusTimeline from "../components/orders/OrderStatusTimeline";
 
 function TrackOrder() {
   const [searchParams] = useSearchParams();
@@ -125,6 +126,9 @@ function TrackOrder() {
                     {order.status}
                   </span>
                 </div>
+                <div className="mt-5">
+                  <OrderStatusTimeline status={order.status} />
+                </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5 text-sm">
                   <div>
@@ -152,9 +156,7 @@ function TrackOrder() {
                       >
                         <div>
                           <p className="font-medium">{item.title}</p>
-                          <p className="text-gray-500">
-                            Qty: {item.quantity}
-                          </p>
+                          <p className="text-gray-500">Qty: {item.quantity}</p>
                         </div>
 
                         <p className="font-medium">

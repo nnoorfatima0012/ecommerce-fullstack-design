@@ -4,6 +4,7 @@ import Header from "../components/layout/Header";
 import Footer from "../components/home/Footer";
 import API from "../api/api";
 import toast from "react-hot-toast";
+import OrderStatusTimeline from "../components/orders/OrderStatusTimeline";
 
 function MyOrderDetails() {
   const { id } = useParams();
@@ -52,7 +53,9 @@ function MyOrderDetails() {
                 {order.status}
               </span>
             </div>
-
+            <div className="mt-5">
+              <OrderStatusTimeline status={order.status} />
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 text-sm">
               <div>
                 <h2 className="font-semibold mb-2">Customer</h2>

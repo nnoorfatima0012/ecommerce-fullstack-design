@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/home/Footer";
 import API from "../api/api";
+import OrderStatusTimeline from "../components/orders/OrderStatusTimeline";
 
 function OrderSuccess() {
   const { orderNumber } = useParams();
@@ -57,27 +58,31 @@ function OrderSuccess() {
           </div>
 
           {order && (
-            <div className="text-left mt-6 border-t pt-5 space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-500">Status</span>
-                <span className="capitalize font-medium">{order.status}</span>
-              </div>
+            <div className="text-left mt-6 border-t pt-5 space-y-5">
+              <OrderStatusTimeline status={order.status} />
 
-              <div className="flex justify-between">
-                <span className="text-gray-500">Customer</span>
-                <span>{order.customer?.fullName}</span>
-              </div>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Status</span>
+                  <span className="capitalize font-medium">{order.status}</span>
+                </div>
 
-              <div className="flex justify-between">
-                <span className="text-gray-500">Total</span>
-                <span className="font-semibold">
-                  ${Number(order.total).toFixed(2)}
-                </span>
-              </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Customer</span>
+                  <span>{order.customer?.fullName}</span>
+                </div>
 
-              <div className="flex justify-between">
-                <span className="text-gray-500">Payment</span>
-                <span>{order.paymentMethod?.replaceAll("_", " ")}</span>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Total</span>
+                  <span className="font-semibold">
+                    ${Number(order.total).toFixed(2)}
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Payment</span>
+                  <span>{order.paymentMethod?.replaceAll("_", " ")}</span>
+                </div>
               </div>
             </div>
           )}
