@@ -1,9 +1,21 @@
+//server/src/features/auth/auth.service.js
 const User = require("../users/user.model");
 const {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
 } = require("../../utils/jwt");
+
+const formatUserResponse = (user) => ({
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  role: user.role,
+  phone: user.phone || "",
+  address: user.address || "",
+  city: user.city || "",
+  postalCode: user.postalCode || "",
+});
 
 const registerUser = async ({ name, email, password, role }) => {
   const existingUser = await User.findOne({ email });
@@ -23,12 +35,7 @@ const registerUser = async ({ name, email, password, role }) => {
   const refreshToken = generateRefreshToken(user);
 
   return {
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    },
+    user: formatUserResponse(user),
     accessToken,
     refreshToken,
   };
@@ -55,12 +62,7 @@ const loginUser = async ({ email, password }) => {
   const refreshToken = generateRefreshToken(user);
 
   return {
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    },
+    user: formatUserResponse(user),
     accessToken,
     refreshToken,
   };
@@ -79,12 +81,7 @@ const refreshAccessToken = async (refreshToken) => {
 
   return {
     accessToken,
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    },
+    user: formatUserResponse(user),
   };
 };
 
@@ -95,17 +92,34 @@ const getCurrentUser = async (userId) => {
     throw new Error("User not found");
   }
 
-  return {
-    id: user._id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-  };
+  return formatUserResponse(user);
 };
 
+
+const updateProfile = async (userId, profileData) => {
+  const allowedUpdates = {
+    name: profileData.name,
+    phone: profileData.phone,
+    address: profileData.address,
+    city: profileData.city,
+    postalCode: profileData.postalCode,
+  };
+
+  const user = await User.findByIdAndUpdate(userId, allowedUpdates, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return formatUserResponse(user);
+};
 module.exports = {
   registerUser,
   loginUser,
   refreshAccessToken,
   getCurrentUser,
+  updateProfile,
 };

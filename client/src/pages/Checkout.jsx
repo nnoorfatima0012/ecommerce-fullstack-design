@@ -27,15 +27,44 @@ function Checkout() {
     paymentMethod: "cash_on_delivery",
   });
 
+  const [useSavedProfile, setUseSavedProfile] = useState(true);
+
+  const fillFromProfile = () => {
+    if (!user) return;
+
+    setFormData((prev) => ({
+      ...prev,
+      fullName: user.name || "",
+      email: user.email || "",
+      phone: user.phone || "",
+      address: user.address || "",
+      city: user.city || "",
+      postalCode: user.postalCode || "",
+    }));
+  };
+
   useEffect(() => {
-    if (isAuthenticated && user) {
-      setFormData((prev) => ({
-        ...prev,
-        fullName: prev.fullName || user.name || "",
-        email: prev.email || user.email || "",
-      }));
-    }
-  }, [isAuthenticated, user]);
+  if (!isAuthenticated || !user || !useSavedProfile) return;
+
+  setFormData((prev) => ({
+    ...prev,
+    fullName: user.name || "",
+    email: user.email || "",
+    phone: user.phone || "",
+    address: user.address || "",
+    city: user.city || "",
+    postalCode: user.postalCode || "",
+  }));
+}, [
+  isAuthenticated,
+  useSavedProfile,
+  user?.name,
+  user?.email,
+  user?.phone,
+  user?.address,
+  user?.city,
+  user?.postalCode,
+]);
 
   const [loading, setLoading] = useState(false);
 
@@ -116,7 +145,23 @@ function Checkout() {
                 </span>
               )}
             </div>
+            {isAuthenticated && (
+              <label className="flex items-center gap-2 text-sm text-gray-700 bg-blue-50 border border-blue-100 rounded-md p-3 mb-4">
+                <input
+                  type="checkbox"
+                  checked={useSavedProfile}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setUseSavedProfile(checked);
 
+                    if (checked) {
+                      fillFromProfile();
+                    }
+                  }}
+                />
+                Use my saved profile information for this order
+              </label>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
                 name="fullName"

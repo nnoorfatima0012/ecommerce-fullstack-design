@@ -1,3 +1,4 @@
+//server/src/features/auth/auth.routes.js
 const express = require("express");
 
 const {
@@ -6,6 +7,7 @@ const {
   refresh,
   logout,
   me,
+  updateProfile,
 } = require("./auth.controller");
 
 const { protect } = require("../../middleware/auth.middleware");
@@ -17,5 +19,6 @@ router.post("/login", login);
 router.post("/refresh", refresh);
 router.post("/logout", logout);
 router.get("/me", protect, me);
+router.patch("/profile", protect, updateProfile);
 
 module.exports = router;
