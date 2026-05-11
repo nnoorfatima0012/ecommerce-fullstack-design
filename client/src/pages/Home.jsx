@@ -1,68 +1,4 @@
-// //src/pages/Home.jsx
-// import Header from "../components/layout/Header";
-// import Navbar from "../components/layout/Navbar";
-// import HeroSection from "../components/home/HeroSection";
-// import DealsSection from "../components/home/DealsSection";
-// import ProductBlock from "../components/home/ProductBlock";
-// import InquirySection from "../components/home/InquirySection";
-// import RecommendedItems from "../components/home/RecommendedItems";
-// import ServicesSection from "../components/home/ServicesSection";
-// import SuppliersSection from "../components/home/SuppliersSection";
-// import Newsletter from "../components/home/Newsletter";
-// import Footer from "../components/home/Footer";
-
-
-// const homeItems = [
-//   {
-//     name: "Soft chairs",
-//     price: 19,
-//     image: "https://img.icons8.com/color/96/armchair.png",
-//   },
-//   {
-//     name: "Sofa & chair",
-//     price: 19,
-//     image: "https://img.icons8.com/color/96/sofa.png",
-//   },
-//   {
-//     name: "Kitchen dishes",
-//     price: 19,
-//     image: "https://img.icons8.com/color/96/plate.png",
-//   },
-//   {
-//     name: "Smart watches",
-//     price: 19,
-//     image: "https://img.icons8.com/color/96/apple-watch.png",
-//   },
-//   {
-//     name: "Kitchen mixer",
-//     price: 100,
-//     image: "https://img.icons8.com/color/96/blender.png",
-//   },
-//   {
-//     name: "Blenders",
-//     price: 39,
-//     image: "https://img.icons8.com/color/96/kitchen.png",
-//   },
-//   {
-//     name: "Home appliance",
-//     price: 19,
-//     image: "https://img.icons8.com/color/96/coffee-maker.png",
-//   },
-//   {
-//     name: "Coffee maker",
-//     price: 10,
-//     image: "https://img.icons8.com/color/96/coffee.png",
-//   },
-// ];
-
-// const electronicItems = [
-//   {
-//     name: "Smart watches",
-//     price: 19,
-//     image: "https://img.icons8.com/color/96/apple-watch.png",
-//   },
-//   {
-
+//client/src/pages/Home.jsx
 import { useEffect, useState } from "react";
 
 import Header from "../components/layout/Header";
@@ -89,8 +25,8 @@ function Home() {
       try {
         const [dealRes, recRes, allRes] = await Promise.all([
           API.get("/products?deal=true"),
-          API.get("/products?recommended=true"),
-          API.get("/products"),
+          API.get("/products?recommended=true?"),
+          API.get("/products?limit=100"),
         ]);
 
         const allProducts = allRes.data.data || [];

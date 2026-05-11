@@ -1,95 +1,95 @@
-// //src/components/cart/SavedForLater.jsx
-// const saved = [
-//   { title: "GoPro HERO6 4K Action Camera - Black", price: "$99.50", image: "https://img.icons8.com/color/160/tablet.png" },
-//   { title: "GoPro HERO6 4K Action Camera - Black", price: "$99.50", image: "https://img.icons8.com/color/160/iphone.png" },
-//   { title: "GoPro HERO6 4K Action Camera - Black", price: "$99.50", image: "https://img.icons8.com/color/160/apple-watch.png" },
-//   { title: "GoPro HERO6 4K Action Camera - Black", price: "$99.50", image: "https://img.icons8.com/color/160/laptop.png" },
-// ];
-
-// function SavedForLater() {
-//   return (
-//     <section className="bg-white border border-gray-200 rounded-md p-5 mt-5">
-//       <h2 className="font-semibold text-lg mb-4">Saved for later</h2>
-
-//       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-//         {saved.map((item, index) => (
-//           <div key={index}>
-//             <div className="h-[170px] bg-gray-100 rounded-md flex items-center justify-center">
-//               <img src={item.image} alt={item.title} className="max-h-[140px]" />
-//             </div>
-
-//             <p className="font-semibold mt-3">{item.price}</p>
-//             <p className="text-sm text-gray-500 mt-1">{item.title}</p>
-
-//             <button className="mt-3 border border-gray-200 text-blue-600 px-3 py-2 rounded-md text-sm">
-//               🛒 Move to cart
-//             </button>
-//           </div>
-//         ))}
-//       </div>
-//     </section>
-//   );
-// }
-
-// export default SavedForLater;
-
-
-import { ShoppingCart } from "lucide-react";
-
-const saved = [
-  {
-    title: "GoPro HERO6 4K Action Camera - Black",
-    price: "$99.50",
-    image: "https://img.icons8.com/color/160/tablet.png",
-  },
-  {
-    title: "GoPro HERO6 4K Action Camera - Black",
-    price: "$99.50",
-    image: "https://img.icons8.com/color/160/iphone.png",
-  },
-  {
-    title: "GoPro HERO6 4K Action Camera - Black",
-    price: "$99.50",
-    image: "https://img.icons8.com/color/160/apple-watch.png",
-  },
-  {
-    title: "GoPro HERO6 4K Action Camera - Black",
-    price: "$99.50",
-    image: "https://img.icons8.com/color/160/laptop.png",
-  },
-];
+// // //src/components/cart/SavedForLater.jsx
+import { Heart, ShoppingCart, Trash2 } from "lucide-react";
+import { useCart } from "../../context/CartContext";
 
 function SavedForLater() {
+  const { savedForLater, moveToCart, removeFromSaved } = useCart();
+
+  if (!savedForLater || savedForLater.length === 0) {
+    return null;
+  }
+
   return (
-    <section className="bg-white border border-gray-200 rounded-xl sm:rounded-md p-4 sm:p-5 mt-5">
-      <h2 className="font-semibold text-lg mb-4">Saved for later</h2>
-
-      <div className="flex sm:grid sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0">
-        {saved.map((item, index) => (
-          <div
-            key={index}
-            className="min-w-[165px] sm:min-w-0 border border-gray-200 sm:border-0 rounded-xl sm:rounded-none p-3 sm:p-0"
-          >
-            <div className="h-[135px] sm:h-[170px] bg-gray-100 rounded-lg sm:rounded-md flex items-center justify-center">
-              <img
-                src={item.image}
-                alt={item.title}
-                className="max-h-[105px] sm:max-h-[140px]"
-              />
-            </div>
-
-            <p className="font-semibold mt-3">{item.price}</p>
-
-            <p className="text-sm text-gray-500 mt-1 line-clamp-2">
-              {item.title}
-            </p>
-
-            <button className="mt-3 border border-gray-200 text-blue-600 px-3 py-2 rounded-md text-sm flex items-center gap-2">
-              <ShoppingCart size={16} />
-              Move to cart
-            </button>
+    <section className="rounded-3xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5">
+      <div className="mb-5 flex flex-col justify-between gap-3 border-b border-gray-200 pb-4 sm:flex-row sm:items-center">
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+            <Heart size={21} className="fill-blue-600" />
           </div>
-        ))}
+
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">
+              Saved for later
+            </h2>
+            <p className="mt-1 text-sm text-gray-500">
+              Products saved from your cart or product listing.
+            </p>
+          </div>
+        </div>
+
+        <span className="w-fit rounded-full bg-blue-50 px-4 py-1.5 text-sm font-semibold text-blue-600">
+          {savedForLater.length} {savedForLater.length === 1 ? "Item" : "Items"}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {savedForLater.map((item) => {
+          const quantity = Number(item.quantity || 1);
+          const price = Number(item.price || 0);
+
+          return (
+            <div
+              key={item.productId}
+              className="flex gap-4 rounded-2xl border border-gray-200 bg-gray-50 p-3 transition hover:border-blue-200 hover:bg-white hover:shadow-sm"
+            >
+              <div className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-gray-200 bg-white">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="h-full w-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      "https://placehold.co/300x300/e5e7eb/64748b?text=Product";
+                  }}
+                />
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <h3 className="line-clamp-2 font-bold text-gray-900">
+                  {item.title}
+                </h3>
+
+                <p className="mt-1 text-sm text-gray-500">
+                  Qty: {quantity} • ${price.toFixed(2)} each
+                </p>
+
+                <p className="mt-1 text-sm font-semibold text-gray-900">
+                  ${(price * quantity).toFixed(2)}
+                </p>
+
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => moveToCart(item)}
+                    className="inline-flex h-9 items-center gap-2 rounded-xl bg-blue-600 px-3 text-xs font-semibold text-white transition hover:bg-blue-700"
+                  >
+                    <ShoppingCart size={15} />
+                    Move to cart
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => removeFromSaved(item.productId)}
+                    className="inline-flex h-9 items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-3 text-xs font-semibold text-red-600 transition hover:bg-red-100"
+                  >
+                    <Trash2 size={15} />
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

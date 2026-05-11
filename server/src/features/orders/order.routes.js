@@ -1,34 +1,3 @@
-
-
-
-// const express = require("express");
-
-// const {
-//   createOrder,
-//   getOrders,
-//   updateOrderStatus,
-//   trackOrder,
-// } = require("./order.controller");
-
-// const { protect, adminOnly } = require("../../middleware/auth.middleware");
-
-// const router = express.Router();
-
-// // Guest checkout allowed
-// router.post("/", createOrder);
-
-// // Public order tracking allowed
-// router.post("/track", trackOrder);
-
-// // Only admin can see all orders
-// router.get("/", protect, adminOnly, getOrders);
-
-// // Only admin can update order status
-// router.patch("/:id/status", protect, adminOnly, updateOrderStatus);
-
-// module.exports = router;
-
-
 const express = require("express");
 
 const {

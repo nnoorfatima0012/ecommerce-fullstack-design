@@ -1,201 +1,5 @@
-// import {
-//   Heart,
-//   ShieldCheck,
-//   Truck,
-//   MessageCircle,
-//   ChevronLeft,
-//   ChevronRight,
-//   ShoppingCart,
-//   User,
-// } from "lucide-react";
-
-// function ProductDetailsMain({ product }) {
-//   const productImage = product.images?.[0] || product.image;
-//   const supplier = product.supplier || {};
-//   const shipping = product.shipping || {};
-//   const categoryName = product.category?.name || product.category || "N/A";
-
-//   return (
-//     <section className="bg-white sm:border sm:border-gray-200 sm:rounded-md sm:p-5 grid grid-cols-1 lg:grid-cols-[380px_1fr_280px] gap-0 sm:gap-5">
-//       <div className="sm:hidden h-[56px] flex items-center justify-between px-4 bg-white">
-//         <ChevronLeft size={24} />
-//         <div className="flex items-center gap-5">
-//           <ShoppingCart size={22} />
-//           <User size={22} />
-//         </div>
-//       </div>
-
-//       <div>
-//         <div className="relative bg-[#f7f7f7] sm:bg-white sm:border sm:border-gray-200 sm:rounded-md h-[305px] sm:h-[360px] flex items-center justify-center">
-//           <img
-//             src={productImage}
-//             alt={product.title}
-//             className="max-h-[260px] sm:max-h-[320px] object-contain"
-//           />
-
-//           <div className="sm:hidden absolute right-4 bottom-3 bg-gray-400/80 text-white rounded-full px-3 py-2 flex gap-3">
-//             <ChevronLeft size={18} />
-//             <ChevronRight size={18} />
-//           </div>
-//         </div>
-
-//         <div className="hidden sm:grid grid-cols-6 gap-2 mt-3">
-//           {(product.images?.length ? product.images : [productImage]).map(
-//             (img, index) => (
-//               <div
-//                 key={index}
-//                 className="border border-gray-200 rounded-md h-[55px] flex items-center justify-center"
-//               >
-//                 <img
-//                   src={img}
-//                   alt={product.title}
-//                   className="h-[45px] object-contain"
-//                 />
-//               </div>
-//             )
-//           )}
-//         </div>
-//       </div>
-
-//       <div className="px-4 py-4 sm:px-0 sm:py-0">
-//         <p className="hidden sm:block text-green-600 text-[15px]">
-//           {product.inStock ? "✓ In stock" : "Out of stock"}
-//         </p>
-
-//         <div className="flex items-center gap-2 text-[14px] sm:text-[15px]">
-//           <span className="text-orange-400">★★★★☆</span>
-//           <span className="text-orange-500">{product.rating || 0}</span>
-//           <span className="text-gray-300">•</span>
-//           <span className="text-gray-400 flex items-center gap-1">
-//             <MessageCircle size={16} /> {product.reviewsCount || 0} reviews
-//           </span>
-//           <span className="text-gray-300">•</span>
-//           <span className="text-gray-400">{product.sold || 0} sold</span>
-//         </div>
-
-//         <h1 className="text-[17px] sm:text-[22px] font-semibold text-gray-900 leading-snug mt-2">
-//           {product.title}
-//         </h1>
-
-//         <div className="sm:hidden mt-2">
-//           <span className="text-red-600 font-semibold text-[18px]">
-//             ${Number(product.price).toFixed(2)}
-//           </span>
-//           <span className="text-gray-400 text-[14px] ml-2">
-//             ({product.minOrder || 1}+ {product.unit || "pcs"})
-//           </span>
-//         </div>
-
-//         <div className="hidden sm:grid bg-[#fff0df] grid-cols-3 mt-5 p-4">
-//           <div>
-//             <p className="text-red-600 font-semibold">
-//               ${Number(product.price).toFixed(2)}
-//             </p>
-//             <p className="text-gray-500 text-sm">
-//               {product.minOrder || 1}-100 {product.unit || "pcs"}
-//             </p>
-//           </div>
-//           <div>
-//             <p className="font-semibold">
-//               ${Math.max(product.price - 5, 1).toFixed(2)}
-//             </p>
-//             <p className="text-gray-500 text-sm">100-700 {product.unit || "pcs"}</p>
-//           </div>
-//           <div>
-//             <p className="font-semibold">
-//               ${Math.max(product.price - 10, 1).toFixed(2)}
-//             </p>
-//             <p className="text-gray-500 text-sm">700+ {product.unit || "pcs"}</p>
-//           </div>
-//         </div>
-
-//         <div className="sm:hidden flex gap-2 mt-4">
-//           <button className="flex-1 h-[40px] bg-blue-600 text-white rounded-md">
-//             Send inquiry
-//           </button>
-//           <button className="w-[48px] h-[40px] border border-gray-200 rounded-md flex items-center justify-center text-blue-600">
-//             <Heart size={22} />
-//           </button>
-//         </div>
-
-//         <div className="mt-5 space-y-2 sm:space-y-3 text-[15px]">
-//           <div className="grid grid-cols-[115px_1fr] sm:grid-cols-[120px_1fr]">
-//             <span className="text-gray-500">Condition</span>
-//             <span>{product.condition || "Brand new"}</span>
-//           </div>
-
-//           <div className="grid grid-cols-[115px_1fr] sm:grid-cols-[120px_1fr]">
-//             <span className="text-gray-500">Brand</span>
-//             <span>{product.brand || "N/A"}</span>
-//           </div>
-
-//           <div className="grid grid-cols-[115px_1fr] sm:grid-cols-[120px_1fr]">
-//             <span className="text-gray-500">Category</span>
-//             <span>{categoryName}</span>
-//           </div>
-
-//           <div className="grid grid-cols-[115px_1fr] sm:grid-cols-[120px_1fr]">
-//             <span className="text-gray-500">Stock</span>
-//             <span>{product.stock || 0} available</span>
-//           </div>
-//         </div>
-
-//         <p className="sm:hidden mt-3 text-gray-600 leading-snug">
-//           {product.description}
-//         </p>
-
-//         <button className="sm:hidden text-blue-600 mt-2 font-medium">
-//           Read more
-//         </button>
-//       </div>
-
-//       <aside className="mx-3 sm:mx-0 mb-4 sm:mb-0 border border-gray-200 rounded-md p-3 sm:p-4 h-fit">
-//         <div className="flex items-center gap-3">
-//           <div className="w-12 h-12 bg-teal-100 text-teal-700 rounded-md flex items-center justify-center font-semibold text-[22px]">
-//             {supplier.name?.charAt(0) || "S"}
-//           </div>
-
-//           <div className="flex-1">
-//             <p className="text-gray-500 text-sm">Supplier</p>
-//             <p className="font-medium">{supplier.name || "Unknown Supplier"}</p>
-//           </div>
-
-//           <ChevronRight className="sm:hidden text-gray-400" size={22} />
-//         </div>
-
-//         <div className="border-t border-gray-200 mt-3 pt-3 flex sm:block items-center gap-4 sm:space-y-3 text-[14px] sm:text-[15px] text-gray-600">
-//           <p>{supplier.country || shipping.shipsFrom || "N/A"}</p>
-
-//           <p className="flex gap-1 sm:gap-2 items-center">
-//             <ShieldCheck size={17} />
-//             {supplier.verified ? "Verified" : "Not verified"}
-//           </p>
-
-//           <p className="flex gap-1 sm:gap-2 items-center">
-//             <Truck size={17} />
-//             {shipping.freeShipping ? "Free Shipping" : "Shipping available"}
-//           </p>
-//         </div>
-
-//         <button className="hidden sm:block w-full h-[40px] bg-blue-600 text-white rounded-md mt-4">
-//           Send inquiry
-//         </button>
-
-//         <button className="hidden sm:block w-full h-[40px] border border-gray-200 text-blue-600 rounded-md mt-2">
-//           Seller’s profile
-//         </button>
-
-//         <button className="hidden sm:flex items-center justify-center gap-2 w-full mt-4 text-blue-600">
-//           <Heart size={18} />
-//           Save for later
-//         </button>
-//       </aside>
-//     </section>
-//   );
-// }
-
-// export default ProductDetailsMain;
-
+// // client/src/components/products/ProductDetailsMain.jsx
+import { useState } from "react";
 import {
   Heart,
   ShieldCheck,
@@ -208,19 +12,66 @@ import {
 } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 import toast from "react-hot-toast";
+
+const getImageSrc = (image) => {
+  if (!image) return "";
+  if (typeof image === "string") return image;
+  if (image.url) return image.url;
+  return "";
+};
+
 function ProductDetailsMain({ product }) {
-  const { addToCart } = useCart();
-  const productImage = product.images?.[0] || product.image;
+  const { addToCart, toggleSavedForLater, isSavedForLater } = useCart();
+
+  const productId = product?._id || product?.id || product?.productId;
+  const saved = isSavedForLater(productId);
+
+  const images = (product.images?.length ? product.images : [product.image])
+    .map(getImageSrc)
+    .filter(Boolean);
+
+  const fallbackImage =
+    "https://placehold.co/600x600/e5e7eb/64748b?text=Product";
+
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [currentImage, setCurrentImage] = useState(
+    images[0] || getImageSrc(product.image) || fallbackImage
+  );
+
   const supplier = product.supplier || {};
   const shipping = product.shipping || {};
   const categoryName = product.category?.name || product.category || "N/A";
+
   const handleAddToCart = () => {
     addToCart(product, 1);
     toast.success("Added to cart");
   };
+
+  const handleSaveForLater = () => {
+    toggleSavedForLater(product);
+    toast.success(saved ? "Removed from saved" : "Saved for later");
+  };
+
+  const handleImageChange = (index) => {
+    setCarouselIndex(index);
+    setCurrentImage(images[index] || fallbackImage);
+  };
+
+  const prevImage = () => {
+    if (!images.length) return;
+    const newIndex = (carouselIndex - 1 + images.length) % images.length;
+    handleImageChange(newIndex);
+  };
+
+  const nextImage = () => {
+    if (!images.length) return;
+    const newIndex = (carouselIndex + 1) % images.length;
+    handleImageChange(newIndex);
+  };
+
   return (
-    <section className="bg-white sm:border sm:border-gray-200 sm:rounded-md sm:p-5 grid grid-cols-1 lg:grid-cols-[380px_1fr_280px] gap-0 sm:gap-5">
-      <div className="sm:hidden h-[56px] flex items-center justify-between px-4 bg-white">
+    <section className="grid grid-cols-1 gap-0 bg-white sm:gap-5 sm:rounded-md sm:border sm:border-gray-200 sm:p-5 lg:grid-cols-[380px_1fr_280px]">
+      <div className="flex h-[56px] items-center justify-between bg-white px-4 sm:hidden">
         <ChevronLeft size={24} />
         <div className="flex items-center gap-5">
           <ShoppingCart size={22} />
@@ -229,119 +80,137 @@ function ProductDetailsMain({ product }) {
       </div>
 
       <div>
-        <div className="relative bg-[#f7f7f7] sm:bg-white sm:border sm:border-gray-200 sm:rounded-md h-[305px] sm:h-[360px] flex items-center justify-center">
+        <div className="relative flex h-[305px] items-center justify-center bg-[#f7f7f7] sm:h-[360px] sm:rounded-md sm:border sm:border-gray-200 sm:bg-white">
           <img
-            src={productImage}
+            src={currentImage}
             alt={product.title}
-            className="max-h-[260px] sm:max-h-[320px] object-contain"
+            className="max-h-[260px] object-contain transition-all duration-300 sm:max-h-[320px]"
+            onError={(e) => {
+              e.currentTarget.src = fallbackImage;
+            }}
           />
 
-          <div className="sm:hidden absolute right-4 bottom-3 bg-gray-400/80 text-white rounded-full px-3 py-2 flex gap-3">
-            <ChevronLeft size={18} />
-            <ChevronRight size={18} />
+          <div className="absolute bottom-3 right-4 flex gap-3 rounded-full bg-gray-400/80 px-3 py-2 text-white sm:hidden">
+            <button type="button" onClick={prevImage}>
+              <ChevronLeft size={18} />
+            </button>
+
+            <button type="button" onClick={nextImage}>
+              <ChevronRight size={18} />
+            </button>
           </div>
         </div>
 
-        <div className="hidden sm:grid grid-cols-6 gap-2 mt-3">
-          {(product.images?.length ? product.images : [productImage]).map(
-            (img, index) => (
-              <div
-                key={index}
-                className="border border-gray-200 rounded-md h-[55px] flex items-center justify-center"
-              >
-                <img
-                  src={img}
-                  alt={product.title}
-                  className="h-[45px] object-contain"
-                />
-              </div>
-            ),
-          )}
+        <div className="mt-3 hidden grid-cols-6 gap-2 sm:grid">
+          {images.map((img, index) => (
+            <button
+              type="button"
+              key={index}
+              onClick={() => handleImageChange(index)}
+              className={`flex h-[55px] cursor-pointer items-center justify-center rounded-md border transition-transform duration-200 ${
+                currentImage === img
+                  ? "scale-105 border-blue-600"
+                  : "border-gray-200"
+              }`}
+            >
+              <img
+                src={img}
+                alt={product.title}
+                className="h-[45px] object-contain"
+                onError={(e) => {
+                  e.currentTarget.src = fallbackImage;
+                }}
+              />
+            </button>
+          ))}
         </div>
       </div>
 
       <div className="px-4 py-4 sm:px-0 sm:py-0">
-        <p className="hidden sm:block text-green-600 text-[15px]">
+        <p className="hidden text-[15px] text-green-600 sm:block">
           {product.inStock ? "✓ In stock" : "Out of stock"}
         </p>
 
-        <div className="flex items-center gap-2 text-[14px] sm:text-[15px]">
+        <div className="mt-1 flex items-center gap-2 text-[14px] sm:text-[15px]">
           <span className="text-orange-400">★★★★☆</span>
           <span className="text-orange-500">{product.rating || 0}</span>
           <span className="text-gray-300">•</span>
-          <span className="text-gray-400 flex items-center gap-1">
+          <span className="flex items-center gap-1 text-gray-400">
             <MessageCircle size={16} /> {product.reviewsCount || 0} reviews
           </span>
           <span className="text-gray-300">•</span>
           <span className="text-gray-400">{product.sold || 0} sold</span>
         </div>
 
-        <h1 className="text-[17px] sm:text-[22px] font-semibold text-gray-900 leading-snug mt-2">
+        <h1 className="mt-2 text-[17px] font-semibold leading-snug text-gray-900 sm:text-[22px]">
           {product.title}
         </h1>
 
-        <div className="sm:hidden mt-2">
-          <span className="text-red-600 font-semibold text-[18px]">
+        <div className="mt-2 sm:hidden">
+          <span className="text-[18px] font-semibold text-red-600">
             ${Number(product.price).toFixed(2)}
           </span>
-          <span className="text-gray-400 text-[14px] ml-2">
+          <span className="ml-2 text-[14px] text-gray-400">
             ({product.minOrder || 1}+ {product.unit || "pcs"})
           </span>
         </div>
 
-        <div className="hidden sm:grid bg-[#fff0df] grid-cols-3 mt-5 p-4">
+        <div className="mt-5 hidden grid-cols-3 bg-[#fff0df] p-4 sm:grid">
           <div>
-            <p className="text-red-600 font-semibold">
+            <p className="font-semibold text-red-600">
               ${Number(product.price).toFixed(2)}
             </p>
-            <p className="text-gray-500 text-sm">
+            <p className="text-sm text-gray-500">
               {product.minOrder || 1}-100 {product.unit || "pcs"}
             </p>
           </div>
+
           <div>
             <p className="font-semibold">
               ${Math.max(product.price - 5, 1).toFixed(2)}
             </p>
-            <p className="text-gray-500 text-sm">
+            <p className="text-sm text-gray-500">
               100-700 {product.unit || "pcs"}
             </p>
           </div>
+
           <div>
             <p className="font-semibold">
               ${Math.max(product.price - 10, 1).toFixed(2)}
             </p>
-            <p className="text-gray-500 text-sm">
+            <p className="text-sm text-gray-500">
               700+ {product.unit || "pcs"}
             </p>
           </div>
         </div>
-        {/* 
-        <div className="sm:hidden flex gap-2 mt-4">
-          <button className="flex-1 h-[40px] bg-blue-600 text-white rounded-md">
-            Send inquiry
-          </button>
-          <button className="w-[48px] h-[40px] border border-gray-200 rounded-md flex items-center justify-center text-blue-600">
-            <Heart size={22} />
-          </button>
-        </div> */}
-        <div className="sm:hidden flex gap-2 mt-4">
-          <button className="flex-1 h-[40px] bg-blue-600 text-white rounded-md">
+
+        <div className="mt-4 flex gap-2 sm:hidden">
+          <button className="h-[40px] flex-1 rounded-md bg-blue-600 text-white">
             Send inquiry
           </button>
 
           <button
             onClick={handleAddToCart}
-            className="flex-1 h-[40px] bg-green-600 text-white rounded-md"
+            className="h-[40px] flex-1 rounded-md bg-green-600 text-white"
           >
             Add to cart
           </button>
 
-          <button className="w-[48px] h-[40px] border border-gray-200 rounded-md flex items-center justify-center text-blue-600">
-            <Heart size={22} />
+          <button
+            type="button"
+            onClick={handleSaveForLater}
+            className={`flex h-[40px] w-[48px] items-center justify-center rounded-md border ${
+              saved
+                ? "border-blue-100 bg-blue-50 text-blue-600"
+                : "border-gray-200 text-blue-600"
+            }`}
+            title={saved ? "Saved for later" : "Save for later"}
+          >
+            <Heart size={22} className={saved ? "fill-blue-600" : ""} />
           </button>
         </div>
 
-        <div className="mt-5 space-y-2 sm:space-y-3 text-[15px]">
+        <div className="mt-5 space-y-2 text-[15px] sm:space-y-3">
           <div className="grid grid-cols-[115px_1fr] sm:grid-cols-[120px_1fr]">
             <span className="text-gray-500">Condition</span>
             <span>{product.condition || "Brand new"}</span>
@@ -363,60 +232,70 @@ function ProductDetailsMain({ product }) {
           </div>
         </div>
 
-        <p className="sm:hidden mt-3 text-gray-600 leading-snug">
+        <p className="mt-3 leading-snug text-gray-600 sm:hidden">
           {product.description}
         </p>
 
-        <button className="sm:hidden text-blue-600 mt-2 font-medium">
+        <button className="mt-2 font-medium text-blue-600 sm:hidden">
           Read more
         </button>
       </div>
 
-      <aside className="mx-3 sm:mx-0 mb-4 sm:mb-0 border border-gray-200 rounded-md p-3 sm:p-4 h-fit">
+      <aside className="mx-3 mb-4 h-fit rounded-md border border-gray-200 p-3 sm:mx-0 sm:mb-0 sm:p-4">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-teal-100 text-teal-700 rounded-md flex items-center justify-center font-semibold text-[22px]">
+          <div className="flex h-12 w-12 items-center justify-center rounded-md bg-teal-100 text-[22px] font-semibold text-teal-700">
             {supplier.name?.charAt(0) || "S"}
           </div>
 
           <div className="flex-1">
-            <p className="text-gray-500 text-sm">Supplier</p>
+            <p className="text-sm text-gray-500">Supplier</p>
             <p className="font-medium">{supplier.name || "Unknown Supplier"}</p>
           </div>
 
-          <ChevronRight className="sm:hidden text-gray-400" size={22} />
+          <ChevronRight className="text-gray-400 sm:hidden" size={22} />
         </div>
 
-        <div className="border-t border-gray-200 mt-3 pt-3 flex sm:block items-center gap-4 sm:space-y-3 text-[14px] sm:text-[15px] text-gray-600">
+        <div className="mt-3 flex items-center gap-4 border-t border-gray-200 pt-3 text-[14px] text-gray-600 sm:block sm:space-y-3 sm:text-[15px]">
           <p>{supplier.country || shipping.shipsFrom || "N/A"}</p>
 
-          <p className="flex gap-1 sm:gap-2 items-center">
+          <p className="flex items-center gap-1 sm:gap-2">
             <ShieldCheck size={17} />
             {supplier.verified ? "Verified" : "Not verified"}
           </p>
 
-          <p className="flex gap-1 sm:gap-2 items-center">
+          <p className="flex items-center gap-1 sm:gap-2">
             <Truck size={17} />
             {shipping.freeShipping ? "Free Shipping" : "Shipping available"}
           </p>
         </div>
 
-        <button className="hidden sm:block w-full h-[40px] bg-blue-600 text-white rounded-md mt-4">
+        <button className="mt-4 hidden h-[40px] w-full rounded-md bg-blue-600 text-white sm:block">
           Send inquiry
         </button>
+
         <button
           onClick={handleAddToCart}
-          className="hidden sm:block w-full h-[40px] bg-green-600 text-white rounded-md mt-2"
+          className="mt-2 hidden h-[40px] w-full rounded-md bg-green-600 text-white sm:block"
         >
           Add to cart
         </button>
 
-        <button className="hidden sm:block w-full h-[40px] border border-gray-200 text-blue-600 rounded-md mt-2">
+        <button className="mt-2 hidden h-[40px] w-full rounded-md border border-gray-200 text-blue-600 sm:block">
           Seller’s profile
         </button>
 
-        <button className="hidden sm:flex items-center justify-center gap-2 w-full mt-4 text-blue-600">
-          <Heart size={18} />
-          Save for later
+        <button
+          type="button"
+          onClick={handleSaveForLater}
+          disabled={!productId}
+          className={`mt-4 hidden w-full items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-sm font-semibold transition sm:flex ${
+            saved
+              ? "border-blue-100 bg-blue-50 text-blue-600"
+              : "border-gray-200 bg-white text-blue-600 hover:border-blue-200 hover:bg-blue-50"
+          } disabled:cursor-not-allowed disabled:opacity-60`}
+        >
+          <Heart size={18} className={saved ? "fill-blue-600" : ""} />
+          {saved ? "Saved for later" : "Save for later"}
         </button>
       </aside>
     </section>
